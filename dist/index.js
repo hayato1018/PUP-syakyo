@@ -13,6 +13,7 @@ const puppeteer_1 = require("puppeteer");
     await page.setViewport({ width: 1080, height: 1024 });
     // 検索ボックスに文字を入力
     await page.type(".devsite-search-field", "automate beyond recorder");
+    await page.keyboard.press("Enter");
     // 検索結果が表示されるのを待って、最初の結果をクリックする
     const searchResultSelector = ".devsite-result-item-link";
     await page.waitForSelector(searchResultSelector);
