@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 
 ///Screenshots
 
@@ -93,3 +93,115 @@ await browser.close();
 
 // // 通常のページと同様にポップアップページをテストする
 // await browser.close();
+
+// Puppeteerでサポートされている機能について
+
+// WebSocket接続
+// WebSocketを使用して既存のブラウザインスタンスへの接続を確立できる
+// Node.jsAPIに依存するため、ブラウザを直接起動またはダウンロードすることはサポートされていない
+
+// スクリプト評価
+// ブラウザコンテキスト内でJSコードを実行
+
+// ドキュメント操作
+// 現在のWebページのPDFとスクリーンショットを生成
+
+// ページ管理
+// さまざまなWebページを作成、閉じる、およびページ間を移動する
+
+// Cookie処理
+// ブラウザ内でCookieを検査、変更、および管理する
+
+// ネットワーク制御
+// ブラウザによって行われたネットワーク要求と監視および傍受する
+
+// // ブラウザでPuppeteerを実行する方法
+// // Puppeteerをブラウザで実行するには、まずrollupやwebpackなどのバンドラーを使用してブラウザ互換のビルドを作成する
+// // つまり、Puppeteerは通常Node環境で動作するが、ブラウザで動かすにはそのままでは使えない
+// // バンドラーを使い、ブラウザで動くJSとして変換する
+// // 変換後のスクリプトを<script>タグでブラウザに読み込ませれば、Puppeteerをブラウザで実行できる
+
+// import puppeteer from 'puppeteer-core/lib/esm/puppeteer/puppeteer-core-browser'
+// const browser = await puppeteer.connect({
+//     browserWSEndpoint: wsUrl,
+// });
+// alert('Browser has' + (await browser.pages()).length + ' pages');
+// browser.discoonect();
+
+// // バンドラーを使用してアプリをビルドする
+// // たとえば、ロールアップでは次の構成を使用できる
+// // rollup.config.jsでPuppeteerをブラウザようにバンドルさせる設定
+// import { nodeResolve } from "@rollup/plugin-node-resolve";
+
+// export default {
+//   input: "main.mjs",
+//   output: {
+//     format: "esm", // 出力フォーマットをESモジュールに設定
+//     dir: "out", // ビルド後の出力先ディレクトリ
+//   },
+//   // WebDriver BiDi プロトコルを使用しない場合、
+//   // `chromium-bidi/lib/cjs/bidiMapper/BidiMapper.js` を除外することでバンドルサイズを最小化
+//   external: ["chromium-bidi/lib/cjs/bidiMapper/BidiMapper.js"],
+//   plugins: [
+//     nodeResolve({
+//       // バンドルのターゲットをブラウザ環境に設定
+//       browser: true,
+//       // puppeteer-core以外の依存関係を除外
+//       // 事前に npm install puppeteer-core を実行してインストールする必要がある
+//       resolveOnly: ["puppeteer-core"],
+//     }),
+//   ],
+// };
+
+// // Chrome拡張機能でPuppeteerを実行する
+// // 注意！chrome.debuggerでPuppeteerを実行するためのサポートは現在実験段階
+
+// import {
+//   connect,
+//   ExtensionTransport,
+// } from "puppeteer-core/lib/esm/puppeteer/puppeteer-core-browser";
+
+// // タブを新規作成するか、接続するタブを探す
+// const tab = await chrome.tabs.create({
+//   url,
+// });
+
+// // ExtensionTransport.connectTabを使用してPuppeteerを接続
+// const browser = await connect({
+//   transport: await ExtensionTransport.connectTab(tab.id),
+// });
+
+// // browser オブジェクトには1つのページのみ存在し、
+// // それはtransportしたタブに対応する
+// const [page] = await browser.pages();
+
+// // Puppeteerの通常のページ操作を実行
+// console.log(await page.evaluate("document.title"));
+
+// // 接続を解除
+// browser.discoonect();
+
+// バンドラーを使用して拡張機能をビルドする
+// 例）rollupでは次の構成を使用
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+
+export default {
+  input: "main.mjs",
+  output: {
+    format: "esm",
+    dir: "out",
+  },
+  // WebDriver Bidi プロトコルを使用しない場合
+  // `chromium-bidi/lib/cjs/bidiMapper/BidiMapper.js` を除外することでバンドルサイズを最小化
+  external: ["chromium-bidi/lib/cjs/bidiMapper/BidiMapper.js"],
+  plugin: [
+    nodeResolve({
+      // ブラウザ環境をターゲットに設定
+      browser: true,
+
+      // puppeteer-core 以外の依存関係を除外
+      // 必要に応じて npm install puppeteer-core でpuppeteer-coreをインストール
+      resolveOnly: ["puppeteer-core"],
+    }),
+  ],
+};
