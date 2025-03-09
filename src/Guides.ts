@@ -63,3 +63,13 @@ debugger;
 await page.click("a[target=_brank]");
 // --inspect-brkオプションでサーバーを起動する
 // node --inspect-brk path/to/script.js
+// 開いたChrome/Chromiumブラウザで、chrome://inspect/#deviceを開き、「検証」をクリック（デベロッパーツールを開く）
+// 新しく開いたテスト用ブラウザでF8キーを押してテストの実行を再開させる
+// デバッガーステートメントがヒットし、テスト用ブラウザでデバッグできるようになる
+
+// ブラウザコードをプリントする
+// ブラウザが予期せずクラッシュしたり、正しく起動しない場合は起動オプションdumpioをtrueに設定して、
+// ブラウザプロセスからのログを検査することができる
+const browser = await puppeteer.launch({
+  dumpio: true,
+});
