@@ -2,7 +2,9 @@ import puppeteer from "puppeteer";
 
 (async () => {
   // ブラウザを起動し、新しい空のページを開く
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+  });
   const page = await browser.newPage();
 
   // 指定したURLに移動する
@@ -12,7 +14,8 @@ import puppeteer from "puppeteer";
   await page.setViewport({ width: 1080, height: 1024 });
 
   // 検索ボックスに文字を入力
-  await page.type(".devsite-seatch-field", "automate beyond recorder");
+  await page.type(".devsite-search-field", "automate beyond recorder");
+  await page.keyboard.press("Enter");
 
   // 検索結果が表示されるのを待って、最初の結果をクリックする
   const searchResultSelector = ".devsite-result-item-link";
